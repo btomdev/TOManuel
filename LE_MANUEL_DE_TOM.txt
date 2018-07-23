@@ -1,0 +1,402 @@
+   |========================|
+  ||                        ||
+_|||    LE MANUEL DE TOM    |||_
+ |||   créé le 31/05/2017   |||
+  ||                        ||
+   |========================|
+
+
+====================================================================================================
+
+
+# UBUNTU
+	
+
+	# Changer les signets racourci par default
+
+		Edit file :
+			~/.config/user-dirs.dirs
+			/etc/xdg/user-dirs.defaults
+			~/.config/gtk-3.0/bookmarks
+
+
+	# tuer une application bloquer
+
+		ps aux | grep nom_appli_bloquer
+
+		kill -9 pid_du_processus_à_tuer
+
+
+	# IP
+
+		ifconfig
+
+		# Adresse Publique
+
+			curl ifconfig.me
+
+		# Adresse Locale
+
+			hostname -I
+
+
+	# Changer le propriétaire et le groupe d'un fichier ou dossier
+
+		sudo chown propriétaire:groupe fichier
+
+
+	# Changer les permissions
+	
+		sudo chmod 777 fichier
+
+
+	# Restar le panneau de tâches et Panneau de menu
+
+		killall unity-panel-service
+
+
+	# afficher le code de retour du dernier processus d'exécution
+
+		exit(159);
+		echo $?
+		> 159
+
+
+====================================================================================================
+
+
+# BASH CMD
+
+	# Count file
+		
+		find DIR_NAME -name "*.ext" -type f | wc -l
+
+
+	# Delete all file
+
+		find DIR_NAME -name "*.ext" -type f -delete
+
+
+	# Copy verbose
+
+		cp -Riv source_file target_directory
+
+
+
+====================================================================================================
+
+
+# ORACLE
+
+
+	# Connexion
+
+		sqlplus username/password@database-name
+
+
+	# Deconnexion
+
+		exit
+
+
+	# Créer un Schema / User
+
+		CREATE USER "SCHEMA_NAME" PROFILE "DEFAULT" IDENTIFIED BY "PASSWORD" ACCOUNT UNLOCK;
+
+
+	# Accorder tous les privilèges au Schema
+
+		GRANT DBA TO SCHEMA_NAME;
+
+
+	# Supprimer un Schema
+
+		DROP USER user_name CASCADE;
+
+
+	# Changer de schema
+
+		CONNECT username/password;
+
+
+	# Liste users
+
+		select USERNAME, USER_ID, ACCOUNT_STATUS, PROFILE, CREATED from DBA_USERS ORDER BY USER_ID DESC;
+
+
+	# Liste tables appartenant à l'user actuel
+
+		select tablespace_name, table_name from user_tables;
+
+
+	# Execute un Fichier .sql
+
+		@/Users/tom/file.sql
+
+
+	# Description de la table user_tables
+
+		DESC user_tables
+
+
+	# Importer DUMP
+
+		 imp username/password file=schema_to_imp.dmp fromuser=user_from_export touser=user_to_imp log=imp_schema.log
+
+
+	# Exporter DUMP
+
+		exp username/password file=schema_to_exp.dmp log=exp_schema.log owner=USERS statistics=none
+
+
+	# Importer DATADUMP
+
+		impdp username/password dumpfile=schema_to_imp.dpump directory=expdp_dir logfile=impdp_schema.log [schemas=schema_to_import] [remap_schema=old_schema:new_schema] [remap_tablespace=old_tablespace:new_tablespace] [sqlfile=ddl_dump.txt]
+
+
+	# Exporter DATADUMP
+
+		expdp username/password dumpfile=schema_to_exp.dpump directory=expdp_dir logfile=expdp_schema.log schemas=schema_to_export
+
+
+	# Liste des repertoires accessibles
+
+		SELECT * FROM all_directories;
+
+
+	# List All defined variables
+
+		DEF
+
+
+	# Define variable utilisateur
+
+		DEF my_variable = "his value"
+
+
+	# Undefine variable utilisateur
+
+		UNDEF my_variable
+
+
+	# SID ( System ID ) INSTANCE_NAME
+
+		SHOW PARAMETER INSTANCE_NAME;
+
+
+	# SERVICE_NAME
+
+		SHOW PARAMETER SERVICE_NAMES;
+
+
+	# List TableSpace
+
+		SELECT TABLESPACE_NAME FROM USER_TABLESPACES;
+
+
+	# Modifiy column output length
+
+		SET WRAP OFF
+		SET LINESIZE 4000
+
+
+	# Connaitre id du process en cours sur la session
+
+		select s.sid, s.serial#, s.status, p.spid from v$session s, v$process p where s.username = 'AGRICA_TEST_20170816' and p.addr (+) = s.paddr;
+
+
+	# tue un process
+
+		alter system kill session '<sid>,<serial#>';
+
+====================================================================================================
+
+
+# PostgreSQL
+	
+
+	# Créer une base de données
+
+		createdb dbname -U username
+
+		ou
+
+		bdd=# CREATE DATABASE dbname WITH OWNER = username;
+
+
+	# Connexion
+
+		psql -h host -d dbname -U username
+
+
+	# Déconnexion
+
+		dbname=> \q
+
+
+	# Supprimer la base de données
+
+		dropdb dbname -U username
+
+
+	# Faire une restauration à partir d'un fichier .sql
+
+		psql -h localhost -U username -d dbname -f filename.sql
+
+
+	# Faire une restauration à partir d'un fichier .dump
+
+		pg_restore -h localhost -U username -d dbname filename.dump
+
+
+	# Faire une restauration avec suppression de la base de données en même temps (--clean)
+		
+		pg_restore -c -h localhost -U username -v -d dbname < filename.dmp
+
+
+	# Faire une restauration avec log
+		
+		pg_restore -all options > output.txt 2>&1
+
+
+	# Faire une restauration en changant d'owner
+
+		pg_restore -h localhost -U username --no-owner --role=newowner -d dbname filename.dump
+
+
+	# Sauvegarder une base de données dans un fichier .sql
+
+		pg_dump -h localhost -U username -f filename.sql dbname
+
+
+	# Sauvegarder une base de données dans un fichier .dump
+
+		pg_dump -h localhost -U username -Fc -v dbname > filename.dmp
+
+
+	# liste les bases de données
+
+		dbname=> \l
+
+
+	# Liste les tables
+
+		dbname=> \d
+
+
+	# exécute un fichier
+
+		dbname=> \i filename
+
+
+	# Exporter un resultat dans un fichier csv
+
+		dbname=> \copy (Select * From foo) To '/tmp/test.csv' With CSV DELIMITER ';';
+
+
+	# Connexion rapide
+
+		Pour ne pas taper le mot de passe à chaque connexion psql, il faut renseigner le "username" et le "password" dans un fichier .pgpass à la racine de l'utilisateur /home/USER/.pgpass
+
+			localhost:8888:*:username:password
+
+
+	# Modifiy column output length
+
+		dbname=> \pset format wrapped
+
+
+	# Créer / Modifier un nouveau Role
+
+		$ sudo -i -u postgres
+		$ psql
+		CREATE ROLE rolename WITH SUPERUSER CREATEDB CREATEROLE LOGIN ENCRYPTED PASSWORD 'password';
+		ALTER ROLE rolename WITH SUPERUSER CREATEDB CREATEROLE LOGIN ENCRYPTED PASSWORD 'password';
+
+
+	# Désactiver un Trigger
+
+		ALTER TABLE mytable DISABLE TRIGGER mytrigger;  
+		ALTER TABLE mytable ENABLE TRIGGER mytrigger;
+
+
+	# # Désactiver tous les Triggers
+	
+		ALTER TABLE mytable DISABLE TRIGGER ALL;  
+		ALTER TABLE mytable ENABLE TRIGGER ALL;
+
+
+====================================================================================================
+
+
+# SQL SERVER
+
+
+	# Démarage du service
+
+		sudo /opt/mssql/bin/sqlservr start
+		sudo /opt/mssql/bin/sqlservr start&
+
+
+	# Connexion
+
+		sqlcmd -S localhost -U username -P 'password' -d dataname
+
+
+	# Liste les bases de données
+
+		EXEC sp_databases
+		GO
+
+
+	# Insert file
+
+		sqlcmd -S localhost -U username -P 'password' -d dataname -i file
+
+
+	# Faire une restauration à partir d'un fichier bak
+
+		RESTORE DATABASE new_database_name
+		FROM DISK = '/var/opt/mssql/backups/file.bak'
+		WITH MOVE 'data_file' TO '/var/opt/mssql/data/data_file.mdf',
+		MOVE 'data_file_log' TO '/var/opt/mssql/data/data_file_log.ldf'
+		GO
+
+
+	# Supprimer une base
+
+		sqlcmd -S <server_name>\<instance_name>
+		drop database <db_name>
+		go
+
+
+	# Liste des tables
+
+		SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'
+		GO
+
+
+	# Change le nom du schema en dbo pour toutes les tables
+
+		exec sp_MSforeachtable "ALTER SCHEMA dbo TRANSFER ?"
+
+
+	# Output format
+
+		sqlcmd -S my_server
+		:setvar SQLCMDMAXVARTYPEWIDTH 30
+		:setvar SQLCMDMAXFIXEDTYPEWIDTH 30
+		GO
+
+		or
+
+		sqlcmd -S my_server -y 30 -Y 30.
+
+====================================================================================================
+
+# DIVERS
+
+
+	# Fin de ligne (character encoding)
+
+		%0D%0A
