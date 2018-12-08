@@ -8,6 +8,39 @@ _|||    LE MANUEL DE TOM    |||_
 
 ====================================================================================================
 
+# SYMFONY
+
+	# Metre a jour Composer
+		
+		composer self-update
+	
+	
+	# Créer projet Synfony avec version
+		
+		composer create-project symfony/framework-standard-edition <project_name> 3.2.4
+
+
+	# Liste des Bundles enregistré
+		
+		bin/console config:dump-reference
+
+
+	# Liste des services
+		
+		bin/console debug:container
+
+
+	# Liste des parametres
+		
+		bin/console debug:container --parameters
+
+
+	# Vider le cache en prod
+		
+		bin/console cache:clear --env=prod
+
+====================================================================================================
+
 
 # UBUNTU
 	
@@ -484,3 +517,4 @@ _|||    LE MANUEL DE TOM    |||_
 	# Fin de ligne (character encoding)
 
 		%0D%0A
+====================================================================================================
