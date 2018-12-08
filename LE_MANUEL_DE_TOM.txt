@@ -50,25 +50,13 @@ _|||    LE MANUEL DE TOM    |||_
 		sudo chmod 777 fichier
 
 
-	# Restar le panneau de tâches et Panneau de menu
+	# Restart le panneau de tâches et Panneau de menu
 
 		killall unity-panel-service
 
 
-	# afficher le code de retour du dernier processus d'exécution
-
-		exit(159);
-		echo $?
-		> 159
-
-
-====================================================================================================
-
-
-# BASH CMD
-
 	# Count file
-		
+
 		find DIR_NAME -name "*.ext" -type f | wc -l
 
 
@@ -77,9 +65,52 @@ _|||    LE MANUEL DE TOM    |||_
 		find DIR_NAME -name "*.ext" -type f -delete
 
 
-	# Copy verbose
+	# Copy with verbose
 
 		cp -Riv source_file target_directory
+
+
+	# Activer le numlock / Pavé numérique au démarrage
+
+		sudo apt -y install numlockx
+		sudo sh -c 'printf "[SeatDefaults]\ngreeter-setup-script=numlockx on\n" >/usr/share/lightdm/lightdm.conf.d/50-numlock.conf'
+
+
+	# Redemarer le bluetooth
+
+		sudo service bluetooth restart
+
+
+	# LXD CONTAINER (https://tutorials.ubuntu.com/tutorial/tutorial-setting-up-lxd-1604#0)
+
+		# Configurer le LXD
+
+			sudo lxd init
+
+		# Liste des conteneurs
+
+			lxc list
+
+		# Exécuter des commandes dans le conteneur
+
+			lxc exec container_name commande_name
+
+		# Accès au shell du conteneur
+
+			lxc exec ubuntu-neeva /bin/bash
+
+		# Arrêt du conteneur
+
+			lxc stop container_name
+
+		# Supprimer un conteneur
+
+			lxc delete container_name
+
+
+	# Convertir du texte d'un encodage de caractère à un autre
+
+		iconv -f=UTF8 -t=iso885915 toolbar.sql > toolbar_iso.sql
 
 
 
@@ -153,6 +184,8 @@ _|||    LE MANUEL DE TOM    |||_
 
 		impdp username/password dumpfile=schema_to_imp.dpump directory=expdp_dir logfile=impdp_schema.log [schemas=schema_to_import] [remap_schema=old_schema:new_schema] [remap_tablespace=old_tablespace:new_tablespace] [sqlfile=ddl_dump.txt]
 
+		impdp thalesV5/neev4User2Db DIRECTORY=datapump DUMPFILE=expdp-etrainrec-sav.dmp EXCLUDE=STATISTICS EXCLUDE=USER EXCLUDE=SYSTEM_GRANT EXCLUDE=ROLE_GRANT EXCLUDE=DEFAULT_ROLE schemas=etrainrec REMAP_SCHEMA=etrainrec:thalesV5 REMAP_TABLESPACE=DATA:USERS
+
 
 	# Exporter DATADUMP
 
@@ -192,12 +225,14 @@ _|||    LE MANUEL DE TOM    |||_
 	# List TableSpace
 
 		SELECT TABLESPACE_NAME FROM USER_TABLESPACES;
+		SELECT DISTINCT OWNER, TABLESPACE_NAME FROM DBA_SEGMENTS;
+		SELECT USERNAME,DEFAULT_TABLESPACE,TEMPORARY_TABLESPACE FROM DBA_USERS;
 
 
 	# Modifiy column output length
 
 		SET WRAP OFF
-		SET LINESIZE 4000
+		SET LINESIZE 212
 
 
 	# Connaitre id du process en cours sur la session
@@ -208,6 +243,18 @@ _|||    LE MANUEL DE TOM    |||_
 	# tue un process
 
 		alter system kill session '<sid>,<serial#>';
+
+
+	# Changer la valeur du fuseau horaire / timezone (ORA-56935) 
+
+		ALTER SESSION SET EVENTS '30090 TRACE NAME CONTEXT FOREVER, LEVEL 32';
+		exec dbms_dst.unload_secondary;
+
+
+	# Vérifier la nouvelle valeur du fuseau horaire / timezone
+
+		SELECT PROPERTY_NAME, SUBSTR (property_value, 1, 30) value FROM DATABASE_PROPERTIES WHERE PROPERTY_NAME LIKE 'DST_%' ORDER BY PROPERTY_NAME;
+
 
 ====================================================================================================
 
@@ -221,7 +268,7 @@ _|||    LE MANUEL DE TOM    |||_
 
 		ou
 
-		bdd=# CREATE DATABASE dbname WITH OWNER = username;
+		bdd=# CREATE DATABASE dbname WITH OWNER = username ENCODING = 'UTF8';
 
 
 	# Connexion
@@ -249,19 +296,14 @@ _|||    LE MANUEL DE TOM    |||_
 		pg_restore -h localhost -U username -d dbname filename.dump
 
 
-	# Faire une restauration avec suppression de la base de données en même temps (--clean)
+	# Faire une restauration avec vidage de la base de données en même temps (--clean)
 		
 		pg_restore -c -h localhost -U username -v -d dbname < filename.dmp
 
 
-	# Faire une restauration avec log
-		
-		pg_restore -all options > output.txt 2>&1
+	# Faire une restauration en changant d'owner avec log d'erreurs
 
-
-	# Faire une restauration en changant d'owner
-
-		pg_restore -h localhost -U username --no-owner --role=newowner -d dbname filename.dump
+		pg_restore -h localhost -U username --no-owner --role=newowner -d dbname filename.dump > output.txt 2>&1
 
 
 	# Sauvegarder une base de données dans un fichier .sql
@@ -320,10 +362,14 @@ _|||    LE MANUEL DE TOM    |||_
 		ALTER TABLE mytable ENABLE TRIGGER mytrigger;
 
 
-	# # Désactiver tous les Triggers
+	# Désactiver tous les Triggers
 	
 		ALTER TABLE mytable DISABLE TRIGGER ALL;  
 		ALTER TABLE mytable ENABLE TRIGGER ALL;
+
+	# Taille de la base de données
+
+		SELECT pg_size_pretty( pg_database_size( current_database() ) ) As dump, pg_database_size( current_database() ) As base_de_donnee;
 
 
 ====================================================================================================
@@ -343,10 +389,10 @@ _|||    LE MANUEL DE TOM    |||_
 		sqlcmd -S localhost -U username -P 'password' -d dataname
 
 
-	# Liste les bases de données
+	# Creation de la base de données (pas nécessaire normalement)
 
-		EXEC sp_databases
-		GO
+		CREATE DATABASE neeva ON (NAME = neevadb, FILENAME = '/var/opt/mssql/data/neevadb.mdf') LOG ON (NAME = neevadb_log, FILENAME = '/var/opt/mssql/data/neevadb_log.ldf')
+		go
 
 
 	# Insert file
@@ -362,6 +408,9 @@ _|||    LE MANUEL DE TOM    |||_
 		MOVE 'data_file_log' TO '/var/opt/mssql/data/data_file_log.ldf'
 		GO
 
+		exemple :
+		sqlcmd -S localhost -U SA -P 'neev4User2Db' -Q "RESTORE DATABASE CAEN_20180108 FROM DISK = '/var/opt/mssql/backups/neevadb_backup_2018_01_08_220011_0008098.bak' WITH MOVE 'neevadb' TO '/var/opt/mssql/data/caen.mdf', MOVE 'neevadb_log' TO '/var/opt/mssql/data/caen_log.ldf'"
+
 
 	# Supprimer une base
 
@@ -370,15 +419,25 @@ _|||    LE MANUEL DE TOM    |||_
 		go
 
 
+	# Liste les bases de données
+
+		SELECT name, database_id, create_date FROM sys.databases
+		GO  
+
+
 	# Liste des tables
 
 		SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'
 		GO
 
-
 	# Change le nom du schema en dbo pour toutes les tables
 
 		exec sp_MSforeachtable "ALTER SCHEMA dbo TRANSFER ?"
+
+	# Au cas où l'utilisateur "neeva" existe déjà dans un base de données d'un client restaurée, voici la commande à exécuter (en tant qu'administrateur)
+
+		use db_name;
+		EXEC sp_change_users_login 'Auto_Fix', 'neeva'
 
 
 	# Output format
@@ -391,10 +450,35 @@ _|||    LE MANUEL DE TOM    |||_
 		or
 
 		sqlcmd -S my_server -y 30 -Y 30.
+		sqlcmd -S localhost -y 100 -Y 50 -U SA -P 'neev4User2Db' -d CAEN_05122017 -i QueryDebug.sql -o retour.txt
+
+
+	# Output to CSV file
+
+		sqlcmd -S hostname -U username -P pwd -d databasename -i file.sql -o file.csv -W -w 999 -s ";"
+
+
+	# liste les serveurs
+
+		sqlcmd -L
+
+
+	# Afficher les propriétés d'une base de données
+
+		SELECT database_id, is_read_only, collation_name, compatibility_level FROM sys.databases WHERE name = 'dbname';
+
 
 ====================================================================================================
 
+
 # DIVERS
+
+	
+	# afficher le code de retour du dernier processus d'exécution
+
+		exit(159);
+		echo $?
+		> 159
 
 
 	# Fin de ligne (character encoding)
