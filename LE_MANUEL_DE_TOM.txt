@@ -10,7 +10,22 @@ _|||    LE MANUEL DE TOM    |||_
 
 # SYMFONY
 
-	# Metre a jour Composer
+	# Initialiser / configurer composer
+
+		composer init
+	
+
+	# installer composer / charger les dépendances
+
+		composer install
+
+	
+	# recrer l'autoload project 
+
+		composer dump-autoload
+
+
+	# Metre à jour Composer
 		
 		composer self-update
 	
