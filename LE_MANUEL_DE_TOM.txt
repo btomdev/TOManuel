@@ -118,6 +118,11 @@ _|||    LE MANUEL DE TOM    |||_
 		cp -Riv source_file target_directory
 
 
+	# Copier tous les fichier d'un dossier dans un autre avec les fichiers cachées
+
+		mv /source/{,.[^.]}* /target/
+
+
 	# Activer le numlock / Pavé numérique au démarrage
 
 		sudo apt -y install numlockx
