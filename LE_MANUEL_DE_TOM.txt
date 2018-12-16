@@ -31,6 +31,8 @@ _|||    LE MANUEL DE TOM    |||_
 	
 	
 	# Créer projet Synfony avec version
+
+		composer create-project symfony/website-skeleton my-project
 		
 		composer create-project symfony/framework-standard-edition <project_name> 3.2.4
 
