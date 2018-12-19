@@ -37,6 +37,24 @@ _|||    LE MANUEL DE TOM    |||_
 		composer create-project symfony/framework-standard-edition <project_name> 3.2.4
 
 
+	# Étapes pour construction une base de données
+
+		Créer une DB
+			php bin\console doctrine:database:create
+
+		Créer une entité
+			php bin\console make:entity
+
+		Valider un schema
+			php bin\console doctrine:schema:validate
+
+		Créer une migration
+			php bin\console make:migration
+
+		Jouer une migration
+			php bin\console doctrine:migrations:migrate
+
+
 	# Liste des Bundles enregistré
 		
 		bin/console config:dump-reference
