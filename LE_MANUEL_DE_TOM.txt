@@ -76,7 +76,6 @@ _|||    LE MANUEL DE TOM    |||_
 
 ====================================================================================================
 
-
 # UBUNTU
 	
 
@@ -185,364 +184,371 @@ _|||    LE MANUEL DE TOM    |||_
 
 		iconv -f=UTF8 -t=iso885915 toolbar.sql > toolbar_iso.sql
 
-
-
 ====================================================================================================
 
+# DATABASES
 
-# ORACLE
+	====================================================================================================
 
+	# MySql
 
-	# Connexion
+		# Mise à jour d'un champs avec une echantillons de texte d'un autre champs de la même table
 
-		sqlplus username/password@database-name
+			update `catalog_product_translation` set `override_name` = SUBSTRING_INDEX(name, ' ', 1) where `override_name` = 'AFFLELOU FORTY';
 
+		# Mise à jour d'un champs en remplacant un texte precis par un autre, (sensible à la case)
 
-	# Deconnexion
+			UPDATE `catalog_product_translation` SET override_name = REPLACE(override_name, ' AFFLELOU', '');
 
-		exit
+	====================================================================================================
 
+	# ORACLE
 
-	# Créer un Schema / User
 
-		CREATE USER "SCHEMA_NAME" PROFILE "DEFAULT" IDENTIFIED BY "PASSWORD" ACCOUNT UNLOCK;
+		# Connexion
 
+			sqlplus username/password@database-name
 
-	# Accorder tous les privilèges au Schema
 
-		GRANT DBA TO SCHEMA_NAME;
+		# Deconnexion
 
+			exit
 
-	# Supprimer un Schema
 
-		DROP USER user_name CASCADE;
+		# Créer un Schema / User
 
+			CREATE USER "SCHEMA_NAME" PROFILE "DEFAULT" IDENTIFIED BY "PASSWORD" ACCOUNT UNLOCK;
 
-	# Changer de schema
 
-		CONNECT username/password;
+		# Accorder tous les privilèges au Schema
 
+			GRANT DBA TO SCHEMA_NAME;
 
-	# Liste users
 
-		select USERNAME, USER_ID, ACCOUNT_STATUS, PROFILE, CREATED from DBA_USERS ORDER BY USER_ID DESC;
+		# Supprimer un Schema
 
+			DROP USER user_name CASCADE;
 
-	# Liste tables appartenant à l'user actuel
 
-		select tablespace_name, table_name from user_tables;
+		# Changer de schema
 
+			CONNECT username/password;
 
-	# Execute un Fichier .sql
 
-		@/Users/tom/file.sql
+		# Liste users
 
+			select USERNAME, USER_ID, ACCOUNT_STATUS, PROFILE, CREATED from DBA_USERS ORDER BY USER_ID DESC;
 
-	# Description de la table user_tables
 
-		DESC user_tables
+		# Liste tables appartenant à l'user actuel
 
+			select tablespace_name, table_name from user_tables;
 
-	# Importer DUMP
 
-		 imp username/password file=schema_to_imp.dmp fromuser=user_from_export touser=user_to_imp log=imp_schema.log
+		# Execute un Fichier .sql
 
+			@/Users/tom/file.sql
 
-	# Exporter DUMP
 
-		exp username/password file=schema_to_exp.dmp log=exp_schema.log owner=USERS statistics=none
+		# Description de la table user_tables
 
+			DESC user_tables
 
-	# Importer DATADUMP
 
-		impdp username/password dumpfile=schema_to_imp.dpump directory=expdp_dir logfile=impdp_schema.log [schemas=schema_to_import] [remap_schema=old_schema:new_schema] [remap_tablespace=old_tablespace:new_tablespace] [sqlfile=ddl_dump.txt]
+		# Importer DUMP
 
-		impdp thalesV5/neev4User2Db DIRECTORY=datapump DUMPFILE=expdp-etrainrec-sav.dmp EXCLUDE=STATISTICS EXCLUDE=USER EXCLUDE=SYSTEM_GRANT EXCLUDE=ROLE_GRANT EXCLUDE=DEFAULT_ROLE schemas=etrainrec REMAP_SCHEMA=etrainrec:thalesV5 REMAP_TABLESPACE=DATA:USERS
+			 imp username/password file=schema_to_imp.dmp fromuser=user_from_export touser=user_to_imp log=imp_schema.log
 
 
-	# Exporter DATADUMP
+		# Exporter DUMP
 
-		expdp username/password dumpfile=schema_to_exp.dpump directory=expdp_dir logfile=expdp_schema.log schemas=schema_to_export
+			exp username/password file=schema_to_exp.dmp log=exp_schema.log owner=USERS statistics=none
 
 
-	# Liste des repertoires accessibles
+		# Importer DATADUMP
 
-		SELECT * FROM all_directories;
+			impdp username/password dumpfile=schema_to_imp.dpump directory=expdp_dir logfile=impdp_schema.log [schemas=schema_to_import] [remap_schema=old_schema:new_schema] [remap_tablespace=old_tablespace:new_tablespace] [sqlfile=ddl_dump.txt]
 
+			impdp thalesV5/neev4User2Db DIRECTORY=datapump DUMPFILE=expdp-etrainrec-sav.dmp EXCLUDE=STATISTICS EXCLUDE=USER EXCLUDE=SYSTEM_GRANT EXCLUDE=ROLE_GRANT EXCLUDE=DEFAULT_ROLE schemas=etrainrec REMAP_SCHEMA=etrainrec:thalesV5 REMAP_TABLESPACE=DATA:USERS
 
-	# List All defined variables
 
-		DEF
+		# Exporter DATADUMP
 
+			expdp username/password dumpfile=schema_to_exp.dpump directory=expdp_dir logfile=expdp_schema.log schemas=schema_to_export
 
-	# Define variable utilisateur
 
-		DEF my_variable = "his value"
+		# Liste des repertoires accessibles
 
+			SELECT * FROM all_directories;
 
-	# Undefine variable utilisateur
 
-		UNDEF my_variable
+		# List All defined variables
 
+			DEF
 
-	# SID ( System ID ) INSTANCE_NAME
 
-		SHOW PARAMETER INSTANCE_NAME;
+		# Define variable utilisateur
 
+			DEF my_variable = "his value"
 
-	# SERVICE_NAME
 
-		SHOW PARAMETER SERVICE_NAMES;
+		# Undefine variable utilisateur
 
+			UNDEF my_variable
 
-	# List TableSpace
 
-		SELECT TABLESPACE_NAME FROM USER_TABLESPACES;
-		SELECT DISTINCT OWNER, TABLESPACE_NAME FROM DBA_SEGMENTS;
-		SELECT USERNAME,DEFAULT_TABLESPACE,TEMPORARY_TABLESPACE FROM DBA_USERS;
+		# SID ( System ID ) INSTANCE_NAME
 
+			SHOW PARAMETER INSTANCE_NAME;
 
-	# Modifiy column output length
 
-		SET WRAP OFF
-		SET LINESIZE 212
+		# SERVICE_NAME
 
+			SHOW PARAMETER SERVICE_NAMES;
 
-	# Connaitre id du process en cours sur la session
 
-		select s.sid, s.serial#, s.status, p.spid from v$session s, v$process p where s.username = 'AGRICA_TEST_20170816' and p.addr (+) = s.paddr;
+		# List TableSpace
 
+			SELECT TABLESPACE_NAME FROM USER_TABLESPACES;
+			SELECT DISTINCT OWNER, TABLESPACE_NAME FROM DBA_SEGMENTS;
+			SELECT USERNAME,DEFAULT_TABLESPACE,TEMPORARY_TABLESPACE FROM DBA_USERS;
 
-	# tue un process
 
-		alter system kill session '<sid>,<serial#>';
+		# Modifiy column output length
 
+			SET WRAP OFF
+			SET LINESIZE 212
 
-	# Changer la valeur du fuseau horaire / timezone (ORA-56935) 
 
-		ALTER SESSION SET EVENTS '30090 TRACE NAME CONTEXT FOREVER, LEVEL 32';
-		exec dbms_dst.unload_secondary;
+		# Connaitre id du process en cours sur la session
 
+			select s.sid, s.serial#, s.status, p.spid from v$session s, v$process p where s.username = 'AGRICA_TEST_20170816' and p.addr (+) = s.paddr;
 
-	# Vérifier la nouvelle valeur du fuseau horaire / timezone
 
-		SELECT PROPERTY_NAME, SUBSTR (property_value, 1, 30) value FROM DATABASE_PROPERTIES WHERE PROPERTY_NAME LIKE 'DST_%' ORDER BY PROPERTY_NAME;
+		# tue un process
 
+			alter system kill session '<sid>,<serial#>';
 
-====================================================================================================
 
+		# Changer la valeur du fuseau horaire / timezone (ORA-56935) 
 
-# PostgreSQL
-	
+			ALTER SESSION SET EVENTS '30090 TRACE NAME CONTEXT FOREVER, LEVEL 32';
+			exec dbms_dst.unload_secondary;
 
-	# Créer une base de données
 
-		createdb dbname -U username
+		# Vérifier la nouvelle valeur du fuseau horaire / timezone
 
-		ou
+			SELECT PROPERTY_NAME, SUBSTR (property_value, 1, 30) value FROM DATABASE_PROPERTIES WHERE PROPERTY_NAME LIKE 'DST_%' ORDER BY PROPERTY_NAME;
 
-		bdd=# CREATE DATABASE dbname WITH OWNER = username ENCODING = 'UTF8';
+	====================================================================================================
 
-
-	# Connexion
-
-		psql -h host -d dbname -U username
-
-
-	# Déconnexion
-
-		dbname=> \q
-
-
-	# Supprimer la base de données
-
-		dropdb dbname -U username
-
-
-	# Faire une restauration à partir d'un fichier .sql
-
-		psql -h localhost -U username -d dbname -f filename.sql
-
-
-	# Faire une restauration à partir d'un fichier .dump
-
-		pg_restore -h localhost -U username -d dbname filename.dump
-
-
-	# Faire une restauration avec vidage de la base de données en même temps (--clean)
+	# PostgreSQL
 		
-		pg_restore -c -h localhost -U username -v -d dbname < filename.dmp
+
+		# Créer une base de données
+
+			createdb dbname -U username
+
+			ou
+
+			bdd=# CREATE DATABASE dbname WITH OWNER = username ENCODING = 'UTF8';
 
 
-	# Faire une restauration en changant d'owner avec log d'erreurs
+		# Connexion
 
-		pg_restore -h localhost -U username --no-owner --role=newowner -d dbname filename.dump > output.txt 2>&1
-
-
-	# Sauvegarder une base de données dans un fichier .sql
-
-		pg_dump -h localhost -U username -f filename.sql dbname
+			psql -h host -d dbname -U username
 
 
-	# Sauvegarder une base de données dans un fichier .dump
+		# Déconnexion
 
-		pg_dump -h localhost -U username -Fc -v dbname > filename.dmp
-
-
-	# liste les bases de données
-
-		dbname=> \l
+			dbname=> \q
 
 
-	# Liste les tables
+		# Supprimer la base de données
 
-		dbname=> \d
-
-
-	# exécute un fichier
-
-		dbname=> \i filename
+			dropdb dbname -U username
 
 
-	# Exporter un resultat dans un fichier csv
+		# Faire une restauration à partir d'un fichier .sql
 
-		dbname=> \copy (Select * From foo) To '/tmp/test.csv' With CSV DELIMITER ';';
-
-
-	# Connexion rapide
-
-		Pour ne pas taper le mot de passe à chaque connexion psql, il faut renseigner le "username" et le "password" dans un fichier .pgpass à la racine de l'utilisateur /home/USER/.pgpass
-
-			localhost:8888:*:username:password
+			psql -h localhost -U username -d dbname -f filename.sql
 
 
-	# Modifiy column output length
+		# Faire une restauration à partir d'un fichier .dump
 
-		dbname=> \pset format wrapped
-
-
-	# Créer / Modifier un nouveau Role
-
-		$ sudo -i -u postgres
-		$ psql
-		CREATE ROLE rolename WITH SUPERUSER CREATEDB CREATEROLE LOGIN ENCRYPTED PASSWORD 'password';
-		ALTER ROLE rolename WITH SUPERUSER CREATEDB CREATEROLE LOGIN ENCRYPTED PASSWORD 'password';
+			pg_restore -h localhost -U username -d dbname filename.dump
 
 
-	# Désactiver un Trigger
+		# Faire une restauration avec vidage de la base de données en même temps (--clean)
+			
+			pg_restore -c -h localhost -U username -v -d dbname < filename.dmp
 
-		ALTER TABLE mytable DISABLE TRIGGER mytrigger;  
-		ALTER TABLE mytable ENABLE TRIGGER mytrigger;
+
+		# Faire une restauration en changant d'owner avec log d'erreurs
+
+			pg_restore -h localhost -U username --no-owner --role=newowner -d dbname filename.dump > output.txt 2>&1
 
 
-	# Désactiver tous les Triggers
-	
-		ALTER TABLE mytable DISABLE TRIGGER ALL;  
-		ALTER TABLE mytable ENABLE TRIGGER ALL;
+		# Sauvegarder une base de données dans un fichier .sql
 
-	# Taille de la base de données
+			pg_dump -h localhost -U username -f filename.sql dbname
 
-		SELECT pg_size_pretty( pg_database_size( current_database() ) ) As dump, pg_database_size( current_database() ) As base_de_donnee;
 
+		# Sauvegarder une base de données dans un fichier .dump
+
+			pg_dump -h localhost -U username -Fc -v dbname > filename.dmp
+
+
+		# liste les bases de données
+
+			dbname=> \l
+
+
+		# Liste les tables
+
+			dbname=> \d
+
+
+		# exécute un fichier
+
+			dbname=> \i filename
+
+
+		# Exporter un resultat dans un fichier csv
+
+			dbname=> \copy (Select * From foo) To '/tmp/test.csv' With CSV DELIMITER ';';
+
+
+		# Connexion rapide
+
+			Pour ne pas taper le mot de passe à chaque connexion psql, il faut renseigner le "username" et le "password" dans un fichier .pgpass à la racine de l'utilisateur /home/USER/.pgpass
+
+				localhost:8888:*:username:password
+
+
+		# Modifiy column output length
+
+			dbname=> \pset format wrapped
+
+
+		# Créer / Modifier un nouveau Role
+
+			$ sudo -i -u postgres
+			$ psql
+			CREATE ROLE rolename WITH SUPERUSER CREATEDB CREATEROLE LOGIN ENCRYPTED PASSWORD 'password';
+			ALTER ROLE rolename WITH SUPERUSER CREATEDB CREATEROLE LOGIN ENCRYPTED PASSWORD 'password';
+
+
+		# Désactiver un Trigger
+
+			ALTER TABLE mytable DISABLE TRIGGER mytrigger;  
+			ALTER TABLE mytable ENABLE TRIGGER mytrigger;
+
+
+		# Désactiver tous les Triggers
+		
+			ALTER TABLE mytable DISABLE TRIGGER ALL;  
+			ALTER TABLE mytable ENABLE TRIGGER ALL;
+
+		# Taille de la base de données
+
+			SELECT pg_size_pretty( pg_database_size( current_database() ) ) As dump, pg_database_size( current_database() ) As base_de_donnee;
+
+	====================================================================================================
+
+	# SQL SERVER
+
+
+		# Démarage du service
+
+			sudo /opt/mssql/bin/sqlservr start
+			sudo /opt/mssql/bin/sqlservr start&
+
+
+		# Connexion
+
+			sqlcmd -S localhost -U username -P 'password' -d dataname
+
+
+		# Creation de la base de données (pas nécessaire normalement)
+
+			CREATE DATABASE neeva ON (NAME = neevadb, FILENAME = '/var/opt/mssql/data/neevadb.mdf') LOG ON (NAME = neevadb_log, FILENAME = '/var/opt/mssql/data/neevadb_log.ldf')
+			go
+
+
+		# Insert file
+
+			sqlcmd -S localhost -U username -P 'password' -d dataname -i file
+
+
+		# Faire une restauration à partir d'un fichier bak
+
+			RESTORE DATABASE new_database_name
+			FROM DISK = '/var/opt/mssql/backups/file.bak'
+			WITH MOVE 'data_file' TO '/var/opt/mssql/data/data_file.mdf',
+			MOVE 'data_file_log' TO '/var/opt/mssql/data/data_file_log.ldf'
+			GO
+
+			exemple :
+			sqlcmd -S localhost -U SA -P 'neev4User2Db' -Q "RESTORE DATABASE CAEN_20180108 FROM DISK = '/var/opt/mssql/backups/neevadb_backup_2018_01_08_220011_0008098.bak' WITH MOVE 'neevadb' TO '/var/opt/mssql/data/caen.mdf', MOVE 'neevadb_log' TO '/var/opt/mssql/data/caen_log.ldf'"
+
+
+		# Supprimer une base
+
+			sqlcmd -S <server_name>\<instance_name>
+			drop database <db_name>
+			go
+
+
+		# Liste les bases de données
+
+			SELECT name, database_id, create_date FROM sys.databases
+			GO  
+
+
+		# Liste des tables
+
+			SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'
+			GO
+
+		# Change le nom du schema en dbo pour toutes les tables
+
+			exec sp_MSforeachtable "ALTER SCHEMA dbo TRANSFER ?"
+
+		# Au cas où l'utilisateur "neeva" existe déjà dans un base de données d'un client restaurée, voici la commande à exécuter (en tant qu'administrateur)
+
+			use db_name;
+			EXEC sp_change_users_login 'Auto_Fix', 'neeva'
+
+
+		# Output format
+
+			sqlcmd -S my_server
+			:setvar SQLCMDMAXVARTYPEWIDTH 30
+			:setvar SQLCMDMAXFIXEDTYPEWIDTH 30
+			GO
+
+			or
+
+			sqlcmd -S my_server -y 30 -Y 30.
+			sqlcmd -S localhost -y 100 -Y 50 -U SA -P 'neev4User2Db' -d CAEN_05122017 -i QueryDebug.sql -o retour.txt
+
+
+		# Output to CSV file
+
+			sqlcmd -S hostname -U username -P pwd -d databasename -i file.sql -o file.csv -W -w 999 -s ";"
+
+
+		# liste les serveurs
+
+			sqlcmd -L
+
+
+		# Afficher les propriétés d'une base de données
+
+			SELECT database_id, is_read_only, collation_name, compatibility_level FROM sys.databases WHERE name = 'dbname';
 
 ====================================================================================================
-
-
-# SQL SERVER
-
-
-	# Démarage du service
-
-		sudo /opt/mssql/bin/sqlservr start
-		sudo /opt/mssql/bin/sqlservr start&
-
-
-	# Connexion
-
-		sqlcmd -S localhost -U username -P 'password' -d dataname
-
-
-	# Creation de la base de données (pas nécessaire normalement)
-
-		CREATE DATABASE neeva ON (NAME = neevadb, FILENAME = '/var/opt/mssql/data/neevadb.mdf') LOG ON (NAME = neevadb_log, FILENAME = '/var/opt/mssql/data/neevadb_log.ldf')
-		go
-
-
-	# Insert file
-
-		sqlcmd -S localhost -U username -P 'password' -d dataname -i file
-
-
-	# Faire une restauration à partir d'un fichier bak
-
-		RESTORE DATABASE new_database_name
-		FROM DISK = '/var/opt/mssql/backups/file.bak'
-		WITH MOVE 'data_file' TO '/var/opt/mssql/data/data_file.mdf',
-		MOVE 'data_file_log' TO '/var/opt/mssql/data/data_file_log.ldf'
-		GO
-
-		exemple :
-		sqlcmd -S localhost -U SA -P 'neev4User2Db' -Q "RESTORE DATABASE CAEN_20180108 FROM DISK = '/var/opt/mssql/backups/neevadb_backup_2018_01_08_220011_0008098.bak' WITH MOVE 'neevadb' TO '/var/opt/mssql/data/caen.mdf', MOVE 'neevadb_log' TO '/var/opt/mssql/data/caen_log.ldf'"
-
-
-	# Supprimer une base
-
-		sqlcmd -S <server_name>\<instance_name>
-		drop database <db_name>
-		go
-
-
-	# Liste les bases de données
-
-		SELECT name, database_id, create_date FROM sys.databases
-		GO  
-
-
-	# Liste des tables
-
-		SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'
-		GO
-
-	# Change le nom du schema en dbo pour toutes les tables
-
-		exec sp_MSforeachtable "ALTER SCHEMA dbo TRANSFER ?"
-
-	# Au cas où l'utilisateur "neeva" existe déjà dans un base de données d'un client restaurée, voici la commande à exécuter (en tant qu'administrateur)
-
-		use db_name;
-		EXEC sp_change_users_login 'Auto_Fix', 'neeva'
-
-
-	# Output format
-
-		sqlcmd -S my_server
-		:setvar SQLCMDMAXVARTYPEWIDTH 30
-		:setvar SQLCMDMAXFIXEDTYPEWIDTH 30
-		GO
-
-		or
-
-		sqlcmd -S my_server -y 30 -Y 30.
-		sqlcmd -S localhost -y 100 -Y 50 -U SA -P 'neev4User2Db' -d CAEN_05122017 -i QueryDebug.sql -o retour.txt
-
-
-	# Output to CSV file
-
-		sqlcmd -S hostname -U username -P pwd -d databasename -i file.sql -o file.csv -W -w 999 -s ";"
-
-
-	# liste les serveurs
-
-		sqlcmd -L
-
-
-	# Afficher les propriétés d'une base de données
-
-		SELECT database_id, is_read_only, collation_name, compatibility_level FROM sys.databases WHERE name = 'dbname';
-
-
-====================================================================================================
-
 
 # DIVERS
 
@@ -557,4 +563,3 @@ _|||    LE MANUEL DE TOM    |||_
 	# Fin de ligne (character encoding)
 
 		%0D%0A
-====================================================================================================
