@@ -200,6 +200,24 @@ _|||    LE MANUEL DE TOM    |||_
 
 			UPDATE `catalog_product_translation` SET override_name = REPLACE(override_name, ' AFFLELOU', '');
 
+		# Supprimer les doublons et conserver la ligne avec l'ID le plus élevée
+
+			# Etape 1 : Copier toutes les lignes uniques avec l'identifiant le plus élevé
+
+				CREATE TEMPORARY TABLE tmp_table (
+				    SELECT MAX(reference) reference 
+				    FROM catalog_contact_lens_package 
+				    GROUP BY contact_lens_reference, diameter, radius, sphere, back_cylinder, front_cylinder, axis, addition, prism
+				);
+
+			# Etape 2 : Supprimer toutes les lignes du tableau d'origine qui ne sont pas dans le tableau temporaire
+
+				DELETE FROM catalog_contact_lens_package WHERE reference NOT IN (SELECT reference FROM tmp_table);
+
+			# Etape 3 : Supprimer la table temporaire
+
+				DROP TABLE tmp_table;
+
 	====================================================================================================
 
 	# ORACLE
