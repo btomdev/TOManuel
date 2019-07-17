@@ -202,21 +202,18 @@ _|||    LE MANUEL DE TOM    |||_
 
 		# Supprimer les doublons et conserver la ligne avec l'ID le plus élevée
 
-			# Etape 1 : Copier toutes les lignes uniques avec l'identifiant le plus élevé
+			# Step 1: Copy all unique rows with highest id
+			CREATE TEMPORARY TABLE tmp_table (
+			    SELECT MAX(reference) reference 
+			    FROM catalog_contact_lens_package 
+			    GROUP BY contact_lens_reference, diameter, radius, sphere, back_cylinder, front_cylinder, axis, addition, prism
+			);
 
-				CREATE TEMPORARY TABLE tmp_table (
-				    SELECT MAX(reference) reference 
-				    FROM catalog_contact_lens_package 
-				    GROUP BY contact_lens_reference, diameter, radius, sphere, back_cylinder, front_cylinder, axis, addition, prism
-				);
+			# Step 2: Delete all rows in original table that are not in the temporary table
+			DELETE FROM catalog_contact_lens_package WHERE reference NOT IN (SELECT reference FROM tmp_table);
 
-			# Etape 2 : Supprimer toutes les lignes du tableau d'origine qui ne sont pas dans le tableau temporaire
-
-				DELETE FROM catalog_contact_lens_package WHERE reference NOT IN (SELECT reference FROM tmp_table);
-
-			# Etape 3 : Supprimer la table temporaire
-
-				DROP TABLE tmp_table;
+			# Step 3: Remove temporary table
+			DROP TABLE tmp_table;
 
 	====================================================================================================
 
