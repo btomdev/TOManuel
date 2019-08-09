@@ -184,6 +184,12 @@ _|||    LE MANUEL DE TOM    |||_
 
 		iconv -f=UTF8 -t=iso885915 toolbar.sql > toolbar_iso.sql
 
+	# Renommer des fichiers avec expression regulière (regex)
+
+		ex : 3608301245143_LESMINIONS_MIAA009_C28_Ophthalmic_360_00.png ==> 03608301245143_360-000.png
+
+		rename -nv 's/^(\d+).+(_360).(\d+).png/0$1$2-0$3.png/' *.png
+
 ====================================================================================================
 
 # DATABASES
