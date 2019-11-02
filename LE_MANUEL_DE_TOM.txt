@@ -584,3 +584,39 @@ _|||    LE MANUEL DE TOM    |||_
 	# Fin de ligne (character encoding)
 
 		%0D%0A
+
+====================================================================================================
+
+# Mac OS
+	
+	# Raccourci clavier | shortcut
+
+		# Afficher ou masquer les fichiers cachés dans Finder
+
+			Maj + fn + Cmd + ;
+
+
+====================================================================================================
+
+# Docker
+
+	# Remove all images
+
+		docker rmi -f $(docker images -qa)
+	
+	# Stop and remove all containers
+
+		docker container stop `docker container ls -qa` && docker container rm -fv `docker container ls -qa`
+
+	# Remove all Volume
+
+		docker volume rm -f $(docker volume ls -q)
+
+
+====================================================================================================
+
+# Google Chrome
+
+	# Tab Freeze
+		
+		chrome://flags/#proactive-tab-freeze
