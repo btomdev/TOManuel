@@ -608,6 +608,10 @@ _|||    LE MANUEL DE TOM    |||_
 
 		docker container stop `docker container ls -qa` && docker container rm -fv `docker container ls -qa`
 
+	# Remove all Exited containers
+
+		docker ps -f status=exited --format {{.ID}} | xargs docker rm
+
 	# Remove all Volume
 
 		docker volume rm -f $(docker volume ls -q)
