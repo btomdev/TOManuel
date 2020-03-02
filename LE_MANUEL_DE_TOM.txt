@@ -603,6 +603,7 @@ _|||    LE MANUEL DE TOM    |||_
 
 # Mac OS
 	
+	
 	# Raccourci clavier | shortcut
 
 		# Afficher ou masquer les fichiers cachés dans Finder
@@ -613,6 +614,11 @@ _|||    LE MANUEL DE TOM    |||_
 ====================================================================================================
 
 # Docker
+
+
+	# Remove all unused data
+
+		docker system prune -a
 
 	# Remove all images
 
@@ -634,6 +640,7 @@ _|||    LE MANUEL DE TOM    |||_
 ====================================================================================================
 
 # Google Chrome
+
 
 	# Tab Freeze
 		
