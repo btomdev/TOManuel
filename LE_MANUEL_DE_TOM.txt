@@ -76,7 +76,7 @@ _|||    LE MANUEL DE TOM    |||_
 
 ====================================================================================================
 
-# UBUNTU
+# LINUX / BASH / UBUNTU
 	
 
 	# Changer les signets racourci par default
@@ -125,6 +125,19 @@ _|||    LE MANUEL DE TOM    |||_
 	# Count file
 
 		find DIR_NAME -name "*.ext" -type f | wc -l
+
+
+	# Count file with regexp
+
+		l | grep -E '.png|.jpg|.jpeg' | wc -l
+
+		# Pour une correspondance inversée
+
+			l | grep -Ev '.png|.jpg|.jpeg' | wc -l
+
+		# Pour avoir le path de chaque fichier
+
+			ls -R $PWD/* | grep -E '.png|.jpg|.jpeg' | wc -l
 
 
 	# Delete all file
@@ -183,6 +196,7 @@ _|||    LE MANUEL DE TOM    |||_
 	# Convertir du texte d'un encodage de caractère à un autre
 
 		iconv -f=UTF8 -t=iso885915 toolbar.sql > toolbar_iso.sql
+
 
 	# Renommer des fichiers avec expression regulière (regex)
 
