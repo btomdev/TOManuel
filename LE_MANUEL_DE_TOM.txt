@@ -636,6 +636,10 @@ _|||    LE MANUEL DE TOM    |||_
 
 		docker volume rm -f $(docker volume ls -q)
 
+	# Show stats
+
+		docker stats
+
 
 ====================================================================================================
 
@@ -645,3 +649,13 @@ _|||    LE MANUEL DE TOM    |||_
 	# Tab Freeze
 		
 		chrome://flags/#proactive-tab-freeze
+
+
+====================================================================================================
+
+# Git
+	
+	
+	# Remove all local branch without master
+
+		git branch | grep -v "master" | xargs git branch -D
