@@ -620,21 +620,26 @@ _|||    LE MANUEL DE TOM    |||_
 
 		docker system prune -a
 
+
 	# Remove all images
 
 		docker rmi -f $(docker images -qa)
 	
+
 	# Stop and remove all containers
 
 		docker container stop `docker container ls -qa` && docker container rm -fv `docker container ls -qa`
+
 
 	# Remove all Exited containers
 
 		docker ps -f status=exited --format {{.ID}} | xargs docker rm
 
+
 	# Remove all Volume
 
 		docker volume rm -f $(docker volume ls -q)
+
 
 	# Show stats
 
@@ -658,4 +663,28 @@ _|||    LE MANUEL DE TOM    |||_
 	
 	# Remove all local branch without master
 
-		git branch | grep -v "master" | xargs git branch -D
+		git branch | grep -v "master" | xargs git branch -Df
+
+
+	# Rework the commit history
+
+		# Show commit list
+
+			git log
+
+		# Starting Rework the commit history
+
+			git rebase -i <LAST_COMMIT_ID>
+
+			In text editor:
+				1- squash (s) all commit that we no more need
+				2- reedit (r) the commit that we want to keep
+				3- change the commit message to re-edit
+
+		# After successfully rebase, update remote branch
+			
+			git push --force-with-lease
+
+		# After push, communicate to the team the rebase and it will be necessary to get the rebase back with
+
+			git pull --rebase
