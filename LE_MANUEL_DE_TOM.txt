@@ -645,6 +645,10 @@ _|||    LE MANUEL DE TOM    |||_
 
 		docker stats
 
+	# Show workers logs
+
+		docker-compose logs -f --tail=100 workers
+
 
 ====================================================================================================
 
