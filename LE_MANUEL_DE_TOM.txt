@@ -664,7 +664,11 @@ _|||    LE MANUEL DE TOM    |||_
 
 # Git
 	
-	
+	# update last commit without update message
+
+		git commit --amend --no-edit
+		git push -f
+
 	# Remove all local branch without master
 
 		git branch | grep -v "master" | xargs git branch -Df
