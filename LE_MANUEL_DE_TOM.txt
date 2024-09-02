@@ -614,6 +614,9 @@ _|||    LE MANUEL DE TOM    |||_
 ====================================================================================================
 
 # Docker
+	
+	# https://github.com/jolicode/docker-starter
+	# https://blog.eleven-labs.com/fr/comprendre-et-personnaliser-son-environnement-docker/
 
 
 	# Remove all unused data
@@ -650,6 +653,26 @@ _|||    LE MANUEL DE TOM    |||_
 		docker-compose logs -f --tail=100 workers
 
 
+	# Connect to container :
+
+		docker exec -it <CONTAINER_NAME> /bin/bash
+
+
+	# Restart Docker
+
+		killall Docker && open /Applications/Docker.app
+
+
+	# Lister tout les containers actifs lancés par docker compose
+
+		docker compose ps
+
+
+	# Afficher les Réseaux Existants
+
+		docker network ls
+
+
 ====================================================================================================
 
 # Google Chrome
@@ -663,6 +686,10 @@ _|||    LE MANUEL DE TOM    |||_
 ====================================================================================================
 
 # Git
+
+	# Show history with files that changed
+
+		git log --stat --pretty=short --graph
 	
 	# update last commit without update message
 
@@ -673,6 +700,11 @@ _|||    LE MANUEL DE TOM    |||_
 
 		git branch | grep -v "master" | xargs git branch -Df
 
+	# Rebase to master
+
+		git rebase origin/master
+		git status 
+		git push --force-with-lease
 
 	# Rework the commit history
 
@@ -696,3 +728,36 @@ _|||    LE MANUEL DE TOM    |||_
 		# After push, communicate to the team the rebase and it will be necessary to get the rebase back with
 
 			git pull --rebase
+
+	# rollback to commit id and publish on same branch
+
+		git reset --hard <commidId> && git push --force
+
+
+====================================================================================================
+
+# Tests PHPUnit
+	
+	# Template unit test
+	
+		// Dependency
+
+        // Given by dataProvider
+
+        // When
+
+        // Then, assure the test worked
+
+    # Run all app tests
+
+    	vendor/bin/phpunit
+
+    # Run one test
+
+    	phpunit --filter=testDefault
+
+    # Generate code coverage in html
+
+    	vendor/bin/phpunit --coverage-html public/test-coverage
+
+
