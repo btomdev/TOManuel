@@ -204,6 +204,10 @@ _|||    LE MANUEL DE TOM    |||_
 
 		rename -nv 's/^(\d+).+(_360).(\d+).png/0$1$2-0$3.png/' *.png
 
+	# Follow a log file in real-time with lines that contain the word “ERROR”
+
+		tail -f error_file.log | grep "ERROR"
+
 ====================================================================================================
 
 # DATABASES
