@@ -746,6 +746,15 @@ _|||    LE MANUEL DE TOM    |||_
 
 		git reset --hard <commidId> && git push --force
 
+	# list all commits by tom
+		
+		git shortlog -s -n -e | head -1000 | grep Tom
+
+	# list history HEAD
+
+		git reflog
+
+	
 
 ====================================================================================================
 
