@@ -214,6 +214,22 @@ _|||    LE MANUEL DE TOM    |||_
 
 	====================================================================================================
 
+	# MariaDB
+
+		# Lance le server en arrière plan (Daemon mode)
+
+			mysql.server start
+
+		# Lance le server en arrière plan (Daemon mode) et l'activer automatiquement à chaque redemarage
+
+			brew services start mysql
+
+		# Lancer le server en avant-plan (Foreground mode)
+
+			/opt/homebrew/opt/mariadb/bin/mariadbd-safe --datadir\=/opt/homebrew/var/mysql
+
+	====================================================================================================
+
 	# MySql
 
 		# Mise à jour d'un champs avec une echantillons de texte d'un autre champs de la même table
